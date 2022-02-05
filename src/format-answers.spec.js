@@ -2,8 +2,7 @@ const formatAnswers = require('./format-answers');
 const shortid = require('shortid');
 const wrap = require('word-wrap');
 
-const BRANCH_REGEX = /\[branch ch(.*)\]/;
-const STORY_REGEX = /\[ch(.*)\]/;
+const STORY_REGEX = /\[sc-(.*)\]/;
 const type = 'jest';
 const scope = 'testing';
 const subject = 'this is a test subject';
@@ -11,7 +10,6 @@ const body =
   'This body is longer than 100 characters so itll get split into two pieces. Hopefully this doesnt cause problems with your linting';
 
 describe('formatAnswers', () => {
-  let branches = new Array(Math.floor(Math.random() * 6) + 1).fill(0);
   let stories = new Array(Math.floor(Math.random() * 6) + 1).fill(0);
   let arbitrarySpacesJoin = `,${' '.repeat(Math.floor(Math.random() * 3))}`;
   let mockAnswers;
@@ -19,13 +17,11 @@ describe('formatAnswers', () => {
   let buildMsg;
 
   beforeEach(() => {
-    branches = branches.map(shortid.generate);
     stories = stories.map(shortid.generate);
 
     buildMsg = options => {
       mockAnswers = {
         stories: stories.join(arbitrarySpacesJoin),
-        branchStories: branches.join(arbitrarySpacesJoin),
         scope,
         subject,
         issues: '',
@@ -74,7 +70,7 @@ describe('formatAnswers', () => {
     });
   });
 
-  describe('clubhouse', () => {
+  describe('shortcut', () => {
     describe('stories', () => {
       it('correctly parses and appends singular stories', () => {
         buildMsg({
@@ -115,50 +111,6 @@ describe('formatAnswers', () => {
         expect(storymsgs.length).toBe(stories.length);
         storymsgs.forEach((msg, i) =>
           expect(msg.match(STORY_REGEX)[1]).toBe(stories[i])
-        );
-      });
-    });
-
-    describe('branches', () => {
-      it('correctly parses and appends singular branches', () => {
-        buildMsg({
-          branchStories: '1234',
-        });
-
-        const branchmsgs = commitmsgPieces.filter(s => s.match(BRANCH_REGEX));
-        expect(branchmsgs.length).toBe(1);
-        expect(branchmsgs[0].match(BRANCH_REGEX)[1]).toBe('1234');
-      });
-
-      it('correctly parses and appends comma seperated branches', () => {
-        buildMsg({
-          branchStories: '1234,5678',
-        });
-
-        const branchmsgs = commitmsgPieces.filter(s => s.match(BRANCH_REGEX));
-        expect(branchmsgs.length).toBe(2);
-        expect(branchmsgs[0].match(BRANCH_REGEX)[1]).toBe('1234');
-        expect(branchmsgs[1].match(BRANCH_REGEX)[1]).toBe('5678');
-      });
-
-      it('correctly parses and appends comma and space seperated branches', () => {
-        buildMsg({
-          branchStories: '1234, 5678',
-        });
-
-        const branchmsgs = commitmsgPieces.filter(s => s.match(BRANCH_REGEX));
-        expect(branchmsgs.length).toBe(2);
-        expect(branchmsgs[0].match(BRANCH_REGEX)[1]).toBe('1234');
-        expect(branchmsgs[1].match(BRANCH_REGEX)[1]).toBe('5678');
-      });
-
-      it('handles an arbitrary number of spaces and branches', () => {
-        buildMsg();
-
-        const branchmsgs = commitmsgPieces.filter(s => s.match(BRANCH_REGEX));
-        expect(branchmsgs.length).toBe(branches.length);
-        branchmsgs.forEach((msg, i) =>
-          expect(msg.match(BRANCH_REGEX)[1]).toBe(branches[i])
         );
       });
     });

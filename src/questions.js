@@ -62,26 +62,20 @@ module.exports = [
   },
   {
     type: 'confirm',
-    name: 'isClubhouseStory',
-    message: `Link this commit to Clubhouse`,
+    name: 'isShortcutStory',
+    message: `Link this commit to Shortcut`,
     default: false,
   },
   {
     type: 'input',
     name: 'stories',
     message: `What story id(s)? (comma seperated)`,
-    when: answers => answers.isClubhouseStory,
+    when: answers => answers.isShortcutStory,
   },
   {
     type: 'confirm',
-    name: 'isClubhouseBranch',
-    message: `Link this branch to Clubhouse`,
+    name: 'isShortcutBranch',
+    message: `Link this branch to Shortcut`,
     default: false,
-  },
-  {
-    type: 'input',
-    name: 'branchStories',
-    message: `What story id(s)?(comma seperated)`,
-    when: answers => answers.isClubhouseBranch,
   },
 ];

@@ -8,11 +8,11 @@ function filter(array) {
 }
 
 function formatStory(story) {
-  return `[ch${story}]`;
+  return `[sc-${story}]`;
 }
 
 function formatBranchStory(story) {
-  return `[branch ch${story}]`;
+  return `[branch sc${story}]`;
 }
 
 module.exports = function(answers) {
