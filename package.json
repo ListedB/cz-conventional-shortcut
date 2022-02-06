@@ -1,6 +1,6 @@
 {
   "name": "@listedb/cz-conventional-shortcut",
-  "version": "0.0.0-development",
+  "version": "0.1.0",
   "description": "A commitizen + conventional changelog adapter with shortcut friendly tips",
   "main": "index.js",
   "license": "MIT",
