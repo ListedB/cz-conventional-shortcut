@@ -1,12 +1,12 @@
 {
-  "name": "@listedb/cz-conventional-shortcut",
-  "version": "0.1.0",
+  "name": "cz-conventional-shortcut",
+  "version": "0.1.1",
   "description": "A commitizen + conventional changelog adapter with shortcut friendly tips",
   "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Updater/cz-conventional-clubhouse.git"
+    "url": "https://github.com/listedb/cz-conventional-shortcut.git"
   },
   "scripts": {
     "format": "prettier --write --single-quote --trailing-comma es5",
