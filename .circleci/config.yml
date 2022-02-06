@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: ~/cz-conventional-clubhouse
+  working_directory: ~/cz-conventional-shortcut
   docker:
     - image: circleci/node:8
 
