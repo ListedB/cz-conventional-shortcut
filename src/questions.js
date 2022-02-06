@@ -1,6 +1,7 @@
 const map = require('lodash.map');
 const longest = require('longest');
 const rightPad = require('right-pad');
+const { execSync } = require('child_process');
 const types = require('conventional-commit-types').types;
 
 function formatTypes(types) {
@@ -13,6 +14,14 @@ function formatTypes(types) {
   }));
 }
 
+const branchName = execSync('git branch --show-current')
+  .toString()
+  .trim();
+const shortcutIssueRegex = /(?<shortcutIssue>(?<!([A-Z0-0]{1,10})-?)[sc|SC]+-\d+)/;
+const matchResult = branchName.match(shortcutIssueRegex);
+const shortcutIssue =
+  matchResult && matchResult.groups && matchResult.groups.shortcutIssue;
+
 module.exports = [
   {
     type: 'list',
@@ -22,8 +31,15 @@ module.exports = [
   },
   {
     type: 'input',
-    name: 'scope',
-    message: 'What is the scope of this change? (press enter to skip)',
+    name: 'story',
+    message: 'Enter Shortcut story id (SC-123)',
+    default: shortcutIssue || '',
+    validate: function(shortcutStoryId) {
+      return /^(?<!([A-Z0-9]{1,10})-?)[sc|SC]+-\d+$/.test(shortcutStoryId);
+    },
+    filter: function(shortcutStoryId) {
+      return shortcutStoryId.toUpperCase();
+    },
   },
   {
     type: 'input',
@@ -43,39 +59,18 @@ module.exports = [
     default: false,
   },
   {
+    type: 'confirm',
+    name: 'isBreaking',
+    message: 'You do know that this will bump the major version, are you sure?',
+    default: false,
+    when: function(answers) {
+      return answers.isBreaking;
+    },
+  },
+  {
     type: 'input',
     name: 'breaking',
     message: 'Describe the breaking changes:\n',
     when: answers => answers.isBreaking,
-  },
-  {
-    type: 'confirm',
-    name: 'isIssueAffected',
-    message: 'Does this change affect any open Github issues?',
-    default: false,
-  },
-  {
-    type: 'input',
-    name: 'issues',
-    message: 'Add issue references (e.g. "fix #123", "re #123".):',
-    when: answers => answers.isIssueAffected,
-  },
-  {
-    type: 'confirm',
-    name: 'isShortcutStory',
-    message: `Link this commit to Shortcut`,
-    default: false,
-  },
-  {
-    type: 'input',
-    name: 'stories',
-    message: `What story id(s)? (comma seperated)`,
-    when: answers => answers.isShortcutStory,
-  },
-  {
-    type: 'confirm',
-    name: 'isShortcutBranch',
-    message: `Link this branch to Shortcut`,
-    default: false,
   },
 ];

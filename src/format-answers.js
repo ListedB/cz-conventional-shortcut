@@ -1,5 +1,4 @@
 const wrap = require('word-wrap');
-const STORY_REGEX = /[,]\s*/;
 
 function filter(array) {
   return array.filter(function(x) {
@@ -8,11 +7,7 @@ function filter(array) {
 }
 
 function formatStory(story) {
-  return `[sc-${story}]`;
-}
-
-function formatBranchStory(story) {
-  return `[branch sc${story}]`;
+  return `[${story}]`;
 }
 
 module.exports = function(answers) {
@@ -25,11 +20,9 @@ module.exports = function(answers) {
     width: maxLineWidth,
   };
 
-  // parentheses are only needed when a scope is present
-  let scope = answers.scope.trim();
-  scope = scope ? '(' + answers.scope.trim() + ')' : '';
+  const story = answers.story ? formatStory(answers.story) : '';
 
-  const headline = answers.type + scope + ': ' + answers.subject.trim();
+  const headline = `${answers.type}: ${story} ${answers.subject.trim()}`;
 
   const head = headline.slice(0, maxLineWidth);
 
@@ -49,24 +42,7 @@ module.exports = function(answers) {
     : '';
   breaking = wrap(breaking, wrapOptions);
 
-  const issues = answers.issues ? wrap(answers.issues, wrapOptions) : '';
-
-  const stories = answers.stories
-    ? answers.stories
-        .split(STORY_REGEX)
-        .map(formatStory)
-        .join('\n')
-    : '';
-  const branchStories = answers.branchStories
-    ? answers.branchStories
-        .split(STORY_REGEX)
-        .map(formatBranchStory)
-        .join('\n')
-    : '';
-
-  const footer = filter([branchStories, stories, breaking, issues]).join(
-    '\n\n'
-  );
+  const footer = filter([breaking]).join('\n\n');
 
   return `${head}\n\n${body}\n\n${footer}`;
 };
