@@ -17,6 +17,12 @@ This adapter adds 1 feature to commitizen/cz-conventional-changelog:
 A user only needs to know the story number to link the story. The shortcut.com
 specific syntax is added for you. The story number is also pre-populated using when creating your branch with the `<BranchType>/SC-<STORYNUMBER>` naming convetion. Example: `feature/SC-123`
 
+## Installation
+
+```bash
+yarn add commitizen cz-conventional-shortcut
+```
+
 ## Usage
 
 Use as any commitizen adapter by setting `path` in your `package.json`
